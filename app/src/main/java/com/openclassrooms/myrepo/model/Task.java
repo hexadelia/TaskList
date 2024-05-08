@@ -1,5 +1,6 @@
 package com.openclassrooms.myrepo.model;
 
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -7,14 +8,17 @@ import java.util.Objects;
  */
 public class Task {
     private String description;
+    private Date dueDate;
+
 
     /**
      * Constructeur pour créer une nouvelle tâche avec une description.
      *
      * @param description La description de la tâche.
      */
-    public Task(String description) {
+    public Task(String description, Date dueDate) {
         this.description = description;
+        this.dueDate = dueDate;
     }
 
     /**
@@ -35,27 +39,46 @@ public class Task {
         this.description = description;
     }
 
+
+    /**
+     * Obtient la date limite pour effectuer la tache.
+     *
+     * @return La date limite de la tâche.
+     */
+    public Date getDueDate() {
+        return dueDate;
+    }
+
+    /**
+     * Modifie lq date limite pour effectuer la tache.
+     *
+     * @param dueDate La nouvelle date de la tâche.
+     */
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
     /**
      * Vérifie si deux objets Task sont égaux en comparant leurs descriptions.
      *
      * @param o L'objet à comparer.
-     * @return Vrai si les descriptions sont égales, sinon faux.
+     * @return Vrai si les descriptions ainsi que les dates limite sont égales, sinon faux.
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(description, task.description);
+        return Objects.equals(description, task.description) && Objects.equals(dueDate, task.dueDate);
     }
 
     /**
-     * Calcule le code de hachage en utilisant la description de la tâche.
+     * Calcule le code de hachage en utilisant la description ainsi que la date limite de la tâche.
      *
      * @return Le code de hachage calculé.
      */
     @Override
     public int hashCode() {
-        return Objects.hash(description);
+        return Objects.hash(description, dueDate);
     }
 }
