@@ -1,4 +1,5 @@
 package com.openclassrooms.myrepo.ui;
+import android.icu.text.SimpleDateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.openclassrooms.myrepo.R;
 import com.openclassrooms.myrepo.model.Task;
+
+import java.text.DateFormat;
 
 /**
  * Un adaptateur pour afficher la liste de tâches dans un RecyclerView.
@@ -41,6 +44,7 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView factTextView;
+        private final TextView dueDateTextView;
 
         /**
          * Constructeur du ViewHolder.
@@ -48,6 +52,7 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             factTextView = itemView.findViewById(R.id.task_description);
+            dueDateTextView = itemView.findViewById(R.id.task_duedate);
         }
 
         /**
@@ -57,6 +62,8 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
          */
         public void bind(Task task) {
             factTextView.setText(task.getDescription());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
+            dueDateTextView.setText(dateFormat.format(task.getDueDate()));
         }
     }
 
