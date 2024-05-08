@@ -1,5 +1,6 @@
 package com.openclassrooms.myrepo.ui;
 import android.icu.text.SimpleDateFormat;
+import android.icu.util.Calendar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,10 +10,12 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.openclassrooms.myrepo.R;
 import com.openclassrooms.myrepo.model.Task;
 
-import java.text.DateFormat;
+
+import java.util.Date;
 
 /**
  * Un adaptateur pour afficher la liste de tâches dans un RecyclerView.
@@ -43,8 +46,10 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
 
+        private static final long DAY_IN_MILLISECONDS = 86400000;
         private final TextView factTextView;
         private final TextView dueDateTextView;
+        private final LinearProgressIndicator dueDateProgressIndicator;
 
         /**
          * Constructeur du ViewHolder.
@@ -53,6 +58,7 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
             super(itemView);
             factTextView = itemView.findViewById(R.id.task_description);
             dueDateTextView = itemView.findViewById(R.id.task_duedate);
+            dueDateProgressIndicator = itemView.findViewById(R.id.task_duedate_progress_indicator);
         }
 
         /**
@@ -64,6 +70,23 @@ public class TaskRecyclerViewAdapter extends ListAdapter<Task, TaskRecyclerViewA
             factTextView.setText(task.getDescription());
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
             dueDateTextView.setText(dateFormat.format(task.getDueDate()));
+            dueDateProgressIndicator.setProgress(calculateProgress(task.getDueDate()));
+        }
+
+        private int calculateProgress(Date dueDate) {
+            long millisRemaining = getDayInMillis(dueDate) - getDayInMillis(new Date());
+            return Math.max(0, ((int) (100 - (millisRemaining / DAY_IN_MILLISECONDS * 10))));
+        }
+
+        private long getDayInMillis(Date date) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            
+            return calendar.getTimeInMillis();
         }
     }
 
